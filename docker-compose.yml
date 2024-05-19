@@ -1,0 +1,90 @@
+services:
+  asa-island:
+    container_name: asa-island
+    hostname: asa-island
+    image: ark-server
+    build: ./
+    tty: true
+    environment:
+      - 'ASA_START_PARAMS=TheIsland_WP?listen?Port=25600?QueryPort=25610?RCONPort=25620?RCONEnabled=True -WinLiveMaxPlayers=42 -clusterid=aqua_cluster -ClusterDirOverride=/home/aqua/cluster-shared -NoBattlEye -port=25600 -mods=941145,933078,978288,939009,944994,929785,929489,929110,950914,939604,929420,929420,900062,912902,927131,926259,914844,926956,908148,928501,939228,975282,927084,928597,928621,928793,930115,929912,931047,928548,928708,949837,985370,929912'
+    ports:
+      # Game port for player connections through the server browser
+      - 0.0.0.0:25600:25600/udp
+      # Query port
+      - 0.0.0.0:25610:25610/udp
+      # RCON port for remote server administration
+      - 0.0.0.0:25620:25620/tcp
+    #    depends_on:
+    #      - set-permissions-1
+    volumes:
+      - ./aqua-island:/root/.steam/steam/steamapps/common/ARK Survival Ascended Dedicated Server:rw
+      - ./cluster-shared:/home/aqua/cluster-shared:rw
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      asa-network:
+
+  asa-scorched:
+    container_name: asa-scorched
+    hostname: asa-scorched
+    image: ark-server
+    build: ./
+    tty: true
+    environment:
+      - 'ASA_START_PARAMS=ScorchedEarth_WP?listen?Port=25601?QueryPort=25611?RCONPort=25621?RCONEnabled=True -WinLiveMaxPlayers=42 -clusterid=aqua_cluster -ClusterDirOverride=/home/aqua/cluster-shared -NoBattlEye -port=25601 -mods=941145,933078,978288,939009,944994,929785,929489,929110,950914,939604,929420,929420,900062,912902,927131,926259,914844,926956,908148,928501,939228,975282,927084,928597,928621,928793,930115,929912,931047,928548,928708,949837,985370,929912'
+    ports:
+      # Game port for player connections through the server browser
+      - 0.0.0.0:25601:25601/udp
+      # Query port
+      - 0.0.0.0:25611:25611/udp
+      # RCON port for remote server administration
+      - 0.0.0.0:25621:25621/tcp
+    #    depends_on:
+    #      - set-permissions-1
+    volumes:
+      - ./aqua-scorched:/root/.steam/steam/steamapps/common/ARK Survival Ascended Dedicated Server:rw
+      - ./cluster-shared:/home/aqua/cluster-shared:rw
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      asa-network:
+
+  asa-temptress:
+    container_name: asa-temptress
+    hostname: asa-temptress
+    image: ark-server
+    build: ./
+    tty: true
+    environment:
+      - 'ASA_START_PARAMS=Temptress_WP?listen?Port=25602?QueryPort=25612?RCONPort=25622?RCONEnabled=True -WinLiveMaxPlayers=42 -clusterid=aqua_cluster -ClusterDirOverride=/home/aqua/cluster-shared -NoBattlEye -port=25602 -mods=944375,941145,933078,978288,939009,944994,929785,929489,929110,950914,939604,929420,929420,900062,912902,927131,926259,914844,926956,908148,928501,939228,975282,927084,928597,928621,928793,930115,929912,931047,928548,928708,949837,985370,929912'
+    ports:
+      # Game port for player connections through the server browser
+      - 0.0.0.0:25602:25602/udp
+      # Query port
+      - 0.0.0.0:25612:25612/udp
+      # RCON port for remote server administration
+      - 0.0.0.0:25622:25622/tcp
+    #    depends_on:
+    #      - set-permissions-1
+    volumes:
+      - ./aqua-temptress:/root/.steam/steam/steamapps/common/ARK Survival Ascended Dedicated Server:rw
+      - ./cluster-shared:/home/aqua/cluster-shared:rw
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      asa-network:
+
+        #  set-permissions-1:
+        #    container_name: set-permissions-1 
+        #    entrypoint: "/bin/sh -c 'chown -R 25000:25000 /steam ; chown -R 25000:25000 /steamcmd ; chown -R 25000:25000 /server-files ; chown -R 25000:25000 /cluster-shared'"
+        #    user: root
+        #    image: "alpine:latest"
+        #    volumes:
+        #      - steam-island:/steam:rw
+        #      - steamcmd-island:/steamcmd:rw
+        #      - aqua-island:/server-files:rw
+        #      - cluster-shared:/cluster-shared:rw
+
+networks:
+  asa-network:
+    attachable: true
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: 'asanet'
